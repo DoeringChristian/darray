@@ -14,14 +14,8 @@ The "\_darray\_insert" and "\_darray\_remove" functions of Darray are as generic
 
 ## Structure of a Darray
 
-|--------------------|------------------------|-----------------------------|
-| size               | cap                    | data                        |
-|--------------------|------------------------|-----------------------------|
-| Size fo the array. | Capacity of the array. | Data stored in the array.   |
-|                    |                        | This is the address where   |
-|                    |                        | the pointer of the array is |
-|                    |                        | pointing to.                |
-|--------------------|------------------------|-----------------------------|
+| size               | cap                    | data                                                                                         |
+| Size fo the array. | Capacity of the array. | Data stored in the array. This is the address where the pointer of the array is pointing to. |
 
 
 
