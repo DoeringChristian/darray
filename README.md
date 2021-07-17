@@ -18,7 +18,14 @@ The "\_darray\_insert" and "\_darray\_remove" functions of Darray are as generic
 |--------------------|------------------------|----------------------------------------------------------------------------------------------|
 | Size fo the array. | Capacity of the array. | Data stored in the array. This is the address where the pointer of the array is pointing to. |
 
+## Funktions:
 
+|                   | Functions that handle single elements      | Functions that handle arrays of elements            |
+|-------------------|--------------------------------------------|-----------------------------------------------------|
+| Insert at index   | darray\_push(\_arr\_p, \_elem\_p, \_index) | darray\_insert(\_arr\_p, \_elem\_p, \_num, \_index) |
+| Insert at the end | darray\_push\_back(\_arr\_p, \_elem\_p)    | darray\_append(\_arr\_p, \_elem\_p, \_num)          |
+| Remove at index   | darray_pop(\_arr\_p, \_elem\_p, \_index)   | darray_remove(\_arr\_p, \_num, \_index)             |
+| Remove at the end | darray_pop_back(\_arr\_p)                  | ---                                                 |
 
 
 
