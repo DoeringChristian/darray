@@ -311,7 +311,7 @@ static inline struct darray_header *_darray_init(void **dst, size_t cap){
  * Function to insert from src of size src_size in dst at index.
  *
  */
-static inline int _darray_insert(void **dst, void *src, size_t src_size, size_t index){
+static inline int _darray_insert(void **dst, const void *src, size_t src_size, size_t index){
     struct darray_header *header = DARRAY_HEADER(*dst);
 
     size_t target_size = header->size;
