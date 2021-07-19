@@ -336,6 +336,15 @@ static inline struct darray_header *_darray_init(void **dst, size_t cap){
  * could then copy "after index" directly to the correct position.
  */
 
+/*
+ * Expands the array at index by src_size
+ *
+ * @param void **dst: Pointer to the array as a void *.
+ * @param size_t src_size: size by which to extend the array.
+ * @param size_t index: index at which to extend the array.
+ *
+ * @return 1 if success 0 if failed
+ */
 static inline int _darray_expand(void **dst, size_t src_size, size_t index){
     struct darray_header *header = DARRAY_HEADER(*dst);
 
