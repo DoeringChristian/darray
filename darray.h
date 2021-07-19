@@ -183,6 +183,35 @@ struct darray_header{
 #define darray_push(_arr_p, _elem_p, _index) _darray_insert((void **)(_arr_p), _elem_p, sizeof(*(_elem_p)), (_index)*(sizeof(**(_arr_p))))
 
 /*
+ * Inserts an _elem directly into the array at _index. 
+ *
+ * Further elements after _index are moved to the right. Capacity is increaced if needed.
+ * It is posible to insert elements after the end of the darray. The array is increaced accordingly.
+ * Memory in that area is not set to 0 by default.
+ * Uses direct value instead of pointer to the _elem
+ *
+ * @param _arr_p: pointer to the darray.
+ * @param _elem: Element which is to be pushed.
+ * @param _index: index at which poisition the element should be inserted.
+ */
+#define darray_push_val(_arr_p, _elem, _index)\
+    if(_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (_index)*sizeof(**(_arr_p))))\
+        (*(_arr_p))[_index] = (_elem);
+
+/*
+ * Inserts an _elem directly at the end of the array at _index. 
+ *
+ * Capacity is increaced if needed.
+ * Uses direct value instead of pointer to the _elem
+ *
+ * @param _arr_p: pointer to the darray.
+ * @param _elem: Element which is to be pushed.
+ */
+#define darray_push_back_val(_arr_p, _elem)\
+    if(_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (darray_size(_arr_p))*sizeof(**(_arr_p))))\
+        (*(_arr_p))[darray_size(_arr_p)-1] = (_elem);
+
+/*
  * Inserts an array of _elem into the darray at _index.
  *
  * Further elements after _index are moved to the right. Capacity is increaced if needed.
@@ -307,11 +336,43 @@ static inline struct darray_header *_darray_init(void **dst, size_t cap){
  * could then copy "after index" directly to the correct position.
  */
 
+static inline int _darray_expand(void **dst, size_t src_size, size_t index){
+    struct darray_header *header = DARRAY_HEADER(*dst);
+
+    size_t target_size = header->size;
+    if(index > header->size)
+        target_size = index;
+
+    size_t cap = _darray_ciellog2(target_size+src_size);
+    // since header is a temporary pointer it should be ok to overwrite it with realloc.
+    if(cap > header->cap){
+        if((header = (struct darray_header *)DARRAY_REALLOC(header, sizeof(struct darray_header)+cap)) == NULL)
+            return 0;
+        header->cap = cap;
+        *dst = (void *)&header[1];
+    }
+    // either cap was les or equal to header->cap therefore header is still the same and not NULL
+    // or we sucessfully allocated new memory.
+    // or we didn't and returned.
+
+    // set memory to zero if index > header->size
+    memset(((uint8_t *)*dst)+header->size, 0, target_size-header->size);
+    memmove(((uint8_t *)*dst)+src_size+index, ((uint8_t *)*dst)+index, target_size-index);
+    header->size = target_size+src_size;
+    return 1;
+}
+
 /*
  * Function to insert from src of size src_size in dst at index.
  *
  */
 static inline int _darray_insert(void **dst, const void *src, size_t src_size, size_t index){
+    if(_darray_expand(dst, src_size, index) != 0){
+        memmove(((uint8_t *)*dst)+index, src, src_size);
+        return 1;
+    }
+    return 0;
+#if 0
     struct darray_header *header = DARRAY_HEADER(*dst);
 
     size_t target_size = header->size;
@@ -336,6 +397,7 @@ static inline int _darray_insert(void **dst, const void *src, size_t src_size, s
     memmove(((uint8_t *)*dst)+index, src, src_size);
     header->size = target_size+src_size;
     return 1;
+#endif
 }
 
 
