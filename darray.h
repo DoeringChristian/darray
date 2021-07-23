@@ -83,14 +83,24 @@ SOFTWARE.
 /*
  * Definitions of realloc, malloc, free for darray (can be changed to custom allocator)
  */
+#ifndef DARRAY_REALLOC
 #define DARRAY_REALLOC(_void_p, _size) realloc(_void_p, _size)
+#endif
+
+#ifndef DARRAY_MALLOC
 #define DARRAY_MALLOC(_void_p) malloc(_void_p)
+#endif
+
+#ifndef DARRAY_FREE
 #define DARRAY_FREE(_void_p) free(_void_p)
+#endif
 
 /*
  * Growth factor of the darray (not yet tested)
  */
+#ifndef DARRAY_GROWTH_FACTOR
 #define DARRAY_GROWTH_FACTOR 2
+#endif
 
 /*
  * Defines how much smaller the calculated capacity has to be to 
@@ -104,7 +114,9 @@ SOFTWARE.
  *
  *          (array shrinks when cap is smaller than 1/(DARRAY_SHRINK_FACTOR * 2) of header->cap)
  */
+#ifndef DARRAY_SHRINK_FACTOR
 #define DARRAY_SHRINK_FACTOR 2
+#endif
 
 /*
  * Header structure of darray keeps track of the size and cap.
