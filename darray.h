@@ -103,19 +103,22 @@ SOFTWARE.
 #endif
 
 /*
- * Defines how much smaller the calculated capacity has to be to 
- * shrink the array than the current one.
- * darray shrinks when cap < header->cap / DARRAY_SHRINK_FACTOR 
- *
- * example: DARRAY_SHRINK_FACTOR = 2, header->size = 36, header->cap = 128, size = 4
- *          darray shrinks when cap < header->cap / DARRAY_SHRINK_FACTOR 
- *          cap = _darray_ciellog2(header->size - size) = 32
- *          => array shrinks.
- *
- *          (array shrinks when cap is smaller than 1/(DARRAY_SHRINK_FACTOR * 2) of header->cap)
+ * Factor by which to shrink the darray when it shrinks.
+ * Always has to be smaller than DARRAY_SHRINK_LIMIT.
  */
 #ifndef DARRAY_SHRINK_FACTOR
 #define DARRAY_SHRINK_FACTOR 2
+#endif
+
+/*
+ * Limit of how much smaller size has to be than cap before darray shrinks.
+ * Always has to be at least as large as DARRAY_SHRINK_FACTOR!
+ * The two values should also not be equal to have a Hysteresis.
+ *
+ * Example: 4, darray only shrinks when size < 1/4 * cap
+ */
+#ifndef DARRAY_SHRINK_LIMIT
+#define DARRAY_SHRINK_LIMIT 4
 #endif
 
 /*
@@ -290,10 +293,30 @@ struct darray_header{
  */
 #define darray_size(_arr_p) (DARRAY_HEADER(*(_arr_p))->size /sizeof(**(_arr_p)))
 
-static inline size_t _darray_ciellog2(size_t x){
-    size_t i; 
-    for(i = 1; i <= x; i*=DARRAY_GROWTH_FACTOR);
-    return i;
+static inline size_t _darray_size_inc(size_t target_size, size_t base_size){
+    size_t i_tmp = base_size;
+    for(; base_size <= target_size; ){
+        base_size *= DARRAY_GROWTH_FACTOR;
+        // guarantuee that base_size changes so that we don't end up in an infinit loop
+        if(base_size == i_tmp) 
+            base_size++;
+        i_tmp = base_size;
+    }
+    return base_size;
+}
+
+static inline size_t _darray_size_dec(size_t target_size, size_t base_size){
+    size_t i_tmp = base_size;
+    for(; base_size >= target_size * DARRAY_SHRINK_LIMIT; ){
+        base_size /= DARRAY_SHRINK_FACTOR;
+        if(base_size == i_tmp)
+            return base_size;
+        i_tmp = base_size;
+    }
+    // saveguard to prevent shrinking under target_size
+    if(base_size < target_size)
+        base_size = target_size;
+    return base_size;
 }
 
 static inline struct darray_header *_darray_init(void **dst, size_t cap){
@@ -364,7 +387,7 @@ static inline int _darray_expand(void **dst, size_t src_size, size_t index){
     if(index > header->size)
         target_size = index;
 
-    size_t cap = _darray_ciellog2(target_size+src_size);
+    size_t cap = _darray_size_inc(target_size+src_size, header->cap);
     // since header is a temporary pointer it should be ok to overwrite it with realloc.
     if(cap > header->cap){
         if((header = (struct darray_header *)DARRAY_REALLOC(header, sizeof(struct darray_header)+cap)) == NULL)
@@ -428,13 +451,12 @@ static inline int _darray_insert(void **dst, const void *src, size_t src_size, s
  */
 static inline int _darray_remove(void **dst, size_t size, size_t index){
     struct darray_header *header = DARRAY_HEADER(*dst);
-    if(index+size > header->size)
+    if(size > header->size || index+size > header->size)
         return 0;
     memmove(((uint8_t *)*dst)+index, ((uint8_t *)*dst)+index+size, header->size-(index + size));
     header->size -= size;
-    size_t cap = _darray_ciellog2(header->size);
-    // Devided the header-size by DARRAY_SHRINK_FACTOR for histeresis.
-    if(cap < header->cap / DARRAY_SHRINK_FACTOR){
+    size_t cap = _darray_size_dec(header->size, header->cap);
+    if(cap < header->cap){
         if((header = (struct darray_header *)DARRAY_REALLOC(header, sizeof(struct darray_header)+cap)) == NULL)
             return 1;
         header->cap = cap;

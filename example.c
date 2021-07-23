@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define DARRAY_GROWTH_FACTOR 2
+#define DARRAY_SHRINK_FACTOR 2
+#define DARRAY_SHRINK_LIMIT 4
 #include "darray.h"
 
 void array_print(darray(int) arr){
@@ -35,19 +38,54 @@ int main(){
 
 
     darray(int) array;
-    darray_init(&array, 0);
+    darray_init(&array, 129);
     array_print(array);
 
     int int_arr[] = {0,1,2,3,4,5};
     darray_push_back(&array, &int_arr[0]);
+    array_print(array);
     darray_push_val(&array, 10, 0);
+    array_print(array);
     darray_push_val(&array, 9, 0);
     array_print(array);
     int k = darray_size(&array);
     darray_push_val(&array, 5, k);
     darray_push_back_val(&array, 5);
     array_print(array);
+    darray_push_back_val(&array, 5);
+    array_print(array);
+    darray_push_back_val(&array, 5);
+    array_print(array);
+    darray_push_back_val(&array, 5);
+    array_print(array);
     darray_pop_back(&array);
+    array_print(array);
+    darray_pop_back(&array);
+    array_print(array);
+    darray_pop_back(&array);
+    array_print(array);
+    darray_pop_back(&array);
+    array_print(array);
+    darray_pop_back(&array);
+    array_print(array);
+    darray_pop_back(&array);
+    array_print(array);
+    darray_pop_back(&array);
+    array_print(array);
+    darray_pop_back(&array);
+    array_print(array);
+    darray_pop_back(&array);
+    printf("s: %li\n", darray_size(&array));
+    array_print(array);
+
+    darray_append(&array, int_arr, 6);
+    darray_append(&array, int_arr, 6);
+    darray_append(&array, int_arr, 6);
+    darray_append(&array, int_arr, 6);
+    array_print(array);
+
+    //for(;darray_size(&array) != 0; darray_pop_back(&array)) array_print(array);
+    darray_remove(&array, 21, 0);
     array_print(array);
 
     darray_free(&array);
