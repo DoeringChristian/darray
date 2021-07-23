@@ -180,7 +180,7 @@ struct darray_header{
  *
  * @return int: 1 if succes, 0 if failed
  */
-#define darray_push(_arr_p, _elem_p, _index) _darray_insert((void **)(_arr_p), _elem_p, sizeof(*(_elem_p)), (_index)*(sizeof(**(_arr_p))))
+#define darray_push(_arr_p, _elem_p, _index) _darray_insert((void **)(_arr_p), _elem_p, sizeof(**(_arr_p)), (_index)*(sizeof(**(_arr_p))))
 
 /*
  * Inserts an _elem directly into the array at _index. 
@@ -224,7 +224,7 @@ struct darray_header{
  *
  * @return int: 1 if succes, 0 if failed
  */
-#define darray_insert(_arr_p, _elem_p, _num, _index) _darray_insert((void **)(_arr_p), _elem_p, sizeof(*(_elem_p))*(_num), (_index)*(sizeof(**(_arr_p))))
+#define darray_insert(_arr_p, _elem_p, _num, _index) _darray_insert((void **)(_arr_p), _elem_p, sizeof(**(_arr_p))*(_num), (_index)*(sizeof(**(_arr_p))))
 
 /*
  * Removes an element from the darray.
