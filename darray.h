@@ -103,7 +103,7 @@ SOFTWARE.
 #endif
 
 /*
- * Factor by which to shrink the darray when it shrinks.
+ * Factor to set how much bigger cap should be than size when shrinking
  * Always has to be smaller than DARRAY_SHRINK_LIMIT.
  */
 #ifndef DARRAY_SHRINK_FACTOR
@@ -293,32 +293,6 @@ struct darray_header{
  */
 #define darray_size(_arr_p) (DARRAY_HEADER(*(_arr_p))->size /sizeof(**(_arr_p)))
 
-static inline size_t _darray_size_inc(size_t target_size, size_t base_size){
-    size_t i_tmp = base_size;
-    for(; base_size <= target_size; ){
-        base_size *= DARRAY_GROWTH_FACTOR;
-        // guarantuee that base_size changes so that we don't end up in an infinit loop
-        if(base_size == i_tmp) 
-            base_size++;
-        i_tmp = base_size;
-    }
-    return base_size;
-}
-
-static inline size_t _darray_size_dec(size_t target_size, size_t base_size){
-    size_t i_tmp = base_size;
-    for(; base_size >= target_size * DARRAY_SHRINK_LIMIT; ){
-        base_size /= DARRAY_SHRINK_FACTOR;
-        if(base_size == i_tmp)
-            return base_size;
-        i_tmp = base_size;
-    }
-    // saveguard to prevent shrinking under target_size
-    if(base_size < target_size)
-        base_size = target_size;
-    return base_size;
-}
-
 static inline struct darray_header *_darray_init(void **dst, size_t cap){
     struct darray_header *header = NULL;
     if((header = (struct darray_header *)DARRAY_MALLOC(sizeof(struct darray_header) + cap)) == NULL)
@@ -387,9 +361,9 @@ static inline int _darray_expand(void **dst, size_t src_size, size_t index){
     if(index > header->size)
         target_size = index;
 
-    size_t cap = _darray_size_inc(target_size+src_size, header->cap);
     // since header is a temporary pointer it should be ok to overwrite it with realloc.
-    if(cap > header->cap){
+    if(target_size + src_size >= header->cap){
+        size_t cap = (target_size + src_size) * DARRAY_GROWTH_FACTOR;
         if((header = (struct darray_header *)DARRAY_REALLOC(header, sizeof(struct darray_header)+cap)) == NULL)
             return 0;
         header->cap = cap;
@@ -455,8 +429,9 @@ static inline int _darray_remove(void **dst, size_t size, size_t index){
         return 0;
     memmove(((uint8_t *)*dst)+index, ((uint8_t *)*dst)+index+size, header->size-(index + size));
     header->size -= size;
-    size_t cap = _darray_size_dec(header->size, header->cap);
-    if(cap < header->cap){
+
+    if(header->size * DARRAY_SHRINK_LIMIT <= header->cap){
+        size_t cap = (header->size) * DARRAY_SHRINK_FACTOR;
         if((header = (struct darray_header *)DARRAY_REALLOC(header, sizeof(struct darray_header)+cap)) == NULL)
             return 1;
         header->cap = cap;
