@@ -56,6 +56,7 @@ int main(){
     array_print(array);
     darray_push_back_val(&array, 5);
     array_print(array);
+
     darray_push_back_val(&array, 5);
     array_print(array);
     darray_pop_back(&array);

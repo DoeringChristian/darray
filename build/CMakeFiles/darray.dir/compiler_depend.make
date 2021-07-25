@@ -11,7 +11,7 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
   /usr/include/bits/long-double.h \
   /usr/include/gnu/stubs.h \
   /usr/include/gnu/stubs-64.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include/stddef.h \
+  /usr/lib/gcc/x86_64-redhat-linux/11/include/stddef.h \
   /usr/include/bits/waitflags.h \
   /usr/include/bits/waitstatus.h \
   /usr/include/bits/floatn.h \
@@ -45,7 +45,7 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
   /usr/include/alloca.h \
   /usr/include/bits/stdlib-float.h \
   /usr/include/stdio.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include/stdarg.h \
+  /usr/lib/gcc/x86_64-redhat-linux/11/include/stdarg.h \
   /usr/include/bits/types/__fpos_t.h \
   /usr/include/bits/types/__mbstate_t.h \
   /usr/include/bits/types/__fpos64_t.h \
@@ -58,7 +58,7 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
   /usr/include/bits/types/__locale_t.h \
   /usr/include/strings.h \
   ../darray.h \
-  /usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include/stdint.h \
+  /usr/lib/gcc/x86_64-redhat-linux/11/include/stdint.h \
   /usr/include/stdint.h \
   /usr/include/bits/wchar.h \
   /usr/include/bits/stdint-uintn.h
@@ -66,7 +66,11 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
 
 /usr/include/bits/wchar.h:
 
+/usr/include/bits/byteswap.h:
+
 /usr/include/bits/endianness.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/11/include/stdint.h:
 
 /usr/include/bits/waitflags.h:
 
@@ -76,23 +80,23 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
 
 /usr/include/endian.h:
 
+/usr/include/bits/stdint-intn.h:
+
 /usr/include/bits/types/clock_t.h:
 
 /usr/include/bits/types.h:
 
-/usr/include/sys/types.h:
-
-../example.c:
-
 /usr/include/stdlib.h:
-
-/usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include/stddef.h:
 
 /usr/include/bits/types/clockid_t.h:
 
 /usr/include/bits/floatn-common.h:
 
 /usr/include/bits/floatn.h:
+
+../example.c:
+
+/usr/include/sys/types.h:
 
 /usr/include/bits/endian.h:
 
@@ -104,6 +108,8 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
 
 /usr/include/strings.h:
 
+/usr/include/bits/waitstatus.h:
+
 /usr/include/features.h:
 
 /usr/include/gnu/stubs-64.h:
@@ -111,8 +117,6 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
 /usr/include/bits/struct_mutex.h:
 
 ../darray.h:
-
-/usr/include/bits/waitstatus.h:
 
 /usr/include/bits/time64.h:
 
@@ -130,6 +134,8 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
 
 /usr/include/gnu/stubs.h:
 
+/usr/lib/gcc/x86_64-redhat-linux/11/include/stddef.h:
+
 /usr/include/sys/select.h:
 
 /usr/include/bits/types/struct_FILE.h:
@@ -146,6 +152,8 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
 
 /usr/include/bits/thread-shared-types.h:
 
+/usr/lib/gcc/x86_64-redhat-linux/11/include/stdarg.h:
+
 /usr/include/stdc-predef.h:
 
 /usr/include/bits/pthreadtypes-arch.h:
@@ -159,10 +167,6 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
 /usr/include/bits/types/timer_t.h:
 
 /usr/include/stdio.h:
-
-/usr/include/bits/byteswap.h:
-
-/usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include/stdarg.h:
 
 /usr/include/bits/types/__mbstate_t.h:
 
@@ -179,9 +183,5 @@ CMakeFiles/darray.dir/example.c.o: ../example.c \
 /usr/include/bits/types/locale_t.h:
 
 /usr/include/bits/types/__locale_t.h:
-
-/usr/include/bits/stdint-intn.h:
-
-/usr/lib/gcc/x86_64-pc-linux-gnu/11.1.0/include/stdint.h:
 
 /usr/include/stdint.h:
