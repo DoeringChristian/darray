@@ -1,1 +1,1 @@
-/usr/bin/cc -g CMakeFiles/darray.dir/example.c.o -o darray 
+gcc -g CMakeFiles/darray.dir/example.c.o -o darray 

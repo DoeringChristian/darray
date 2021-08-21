@@ -6,6 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 project(${PROJECT_NAME})
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_FLAGS "-g")
+set(CMAKE_C_COMPILER gcc)
 
 file(GLOB SRC_FILES "*.c")
 include_directories("./")

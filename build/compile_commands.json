@@ -1,7 +1,7 @@
 [
 {
   "directory": "/home/doeringc/share/Projects/darray/build",
-  "command": "/usr/bin/cc  -I/home/doeringc/share/Projects/darray/. -g -std=gnu99 -o CMakeFiles/darray.dir/example.c.o -c /home/doeringc/share/Projects/darray/example.c",
+  "command": "gcc  -I/home/doeringc/share/Projects/darray/. -g -std=gnu99 -o CMakeFiles/darray.dir/example.c.o -c /home/doeringc/share/Projects/darray/example.c",
   "file": "/home/doeringc/share/Projects/darray/example.c"
 }
 ]

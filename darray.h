@@ -209,9 +209,7 @@ struct darray_header{
  * @param _elem: Element which is to be pushed.
  * @param _index: index at which poisition the element should be inserted.
  */
-#define darray_push_val(_arr_p, _elem, _index)\
-    if(_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (_index)*sizeof(**(_arr_p))))\
-        (*(_arr_p))[_index] = (_elem);
+#define darray_push_val(_arr_p, _elem, _index) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (_index)*sizeof(**(_arr_p))) ? ((*(_arr_p))[_index] = (_elem)) == (_elem) : 0)
 
 /*
  * Inserts an _elem directly at the end of the array at _index. 
@@ -222,9 +220,7 @@ struct darray_header{
  * @param _arr_p: pointer to the darray.
  * @param _elem: Element which is to be pushed.
  */
-#define darray_push_back_val(_arr_p, _elem)\
-    if(_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (darray_size(_arr_p))*sizeof(**(_arr_p))))\
-        (*(_arr_p))[darray_size(_arr_p)-1] = (_elem);
+#define darray_push_back_val(_arr_p, _elem) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), darray_size(_arr_p)*sizeof(**(_arr_p)) ) ? ((*(_arr_p))[darray_size(_arr_p)-1] = (_elem)) == (_elem) : 0)
 
 /*
  * Inserts an array of _elem into the darray at _index.
@@ -263,7 +259,6 @@ struct darray_header{
  * @param _arr_p: Pointer to the darray.
  * @param _num: Number of elements to remove.
  * @param _index: Index at which position the element should be removed.
- *
  * @return int: 1 if succes, 0 if failed
  */
 #define darray_remove(_arr_p, _num, _index) _darray_remove((void **)(_arr_p), sizeof(**(_arr_p)) * (_num), (_index)*sizeof(**(_arr_p)))
