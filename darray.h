@@ -95,16 +95,19 @@ SOFTWARE.
 #define DARRAY_FREE(_void_p) free(_void_p)
 #endif
 
+#ifndef DARRAY_INLINE
+#define DARRAY_INLINE inline
+#endif
+
 /*
- * Growth factor of the darray (not yet tested)
+ * Growth factor of the darray 
  */
 #ifndef DARRAY_GROWTH_FACTOR
 #define DARRAY_GROWTH_FACTOR 2
 #endif
 
 /*
- * Factor to set how much bigger cap should be than size when shrinking
- * Always has to be smaller than DARRAY_SHRINK_LIMIT.
+ * Factor to set by how much to shrink the array.
  */
 #ifndef DARRAY_SHRINK_FACTOR
 #define DARRAY_SHRINK_FACTOR 2
@@ -160,17 +163,6 @@ struct darray_header{
 #define darray_init(_arr_p, _cap) _darray_init((void **)(_arr_p), (_cap) * sizeof(**(_arr_p)))
 
 /*
- * Pushes an _elem to the back of the darray. 
- *
- * @param _arr_p: pointer to the darray.
- * @param _elem_p: Pointer to the element which should be pushed back.
- *
- * @return int: 1 if succes, 0 if failed
- */
-#define darray_push_back(_arr_p, _elem_p) darray_push(_arr_p, _elem_p, darray_size((_arr_p)))
-
-
-/*
  * Appends an array of _elem to the back of the array.
  *
  * @param _arr_p: Pointer to the darray.
@@ -181,21 +173,6 @@ struct darray_header{
  */
 
 #define darray_append(_arr_p, _elem_p, _num) darray_insert(_arr_p, _elem_p, _num, darray_size((_arr_p)))
-
-/*
- * Inserts an _elem into the darray at _index.
- *
- * Further elements after _index are moved to the right. Capacity is increaced if needed.
- * It is posible to insert elements after the end of the darray. The array is increaced accordingly.
- * Memory in that area is not set to 0 by default.
- *
- * @param _arr_p: pointer to the darray.
- * @param _elem_p: Pointer to the element which should be appended.
- * @param _index: index at which poisition the element should be inserted.
- *
- * @return int: 1 if succes, 0 if failed
- */
-#define darray_push(_arr_p, _elem_p, _index) _darray_insert((void **)(_arr_p), _elem_p, sizeof(**(_arr_p)), (_index)*(sizeof(**(_arr_p))))
 
 /*
  * Inserts an _elem directly into the array at _index. 
@@ -209,7 +186,7 @@ struct darray_header{
  * @param _elem: Element which is to be pushed.
  * @param _index: index at which poisition the element should be inserted.
  */
-#define darray_push_val(_arr_p, _elem, _index) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (_index)*sizeof(**(_arr_p))) ? ((*(_arr_p))[_index] = (_elem)) == (_elem) : 0)
+#define darray_push(_arr_p, _elem, _index) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (_index)*sizeof(**(_arr_p))) ? ((*(_arr_p))[_index] = (_elem)) == (_elem) : 0)
 
 /*
  * Inserts an _elem directly at the end of the array at _index. 
@@ -220,7 +197,7 @@ struct darray_header{
  * @param _arr_p: pointer to the darray.
  * @param _elem: Element which is to be pushed.
  */
-#define darray_push_back_val(_arr_p, _elem) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), darray_size(_arr_p)*sizeof(**(_arr_p)) ) ? ((*(_arr_p))[darray_size(_arr_p)-1] = (_elem)) == (_elem) : 0)
+#define darray_push_back(_arr_p, _elem) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), darray_size(_arr_p)*sizeof(**(_arr_p)) ) ? ((*(_arr_p))[darray_size(_arr_p)-1] = (_elem)) == (_elem) : 0)
 
 /*
  * Inserts an array of _elem into the darray at _index.
@@ -288,7 +265,7 @@ struct darray_header{
  */
 #define darray_size(_arr_p) (DARRAY_HEADER(*(_arr_p))->size /sizeof(**(_arr_p)))
 
-static inline struct darray_header *_darray_init(void **dst, size_t cap){
+static DARRAY_INLINE struct darray_header *_darray_init(void **dst, size_t cap){
     struct darray_header *header = NULL;
     if((header = (struct darray_header *)DARRAY_MALLOC(sizeof(struct darray_header) + cap)) == NULL)
         return NULL;
@@ -349,7 +326,7 @@ static inline struct darray_header *_darray_init(void **dst, size_t cap){
  *
  * @return 1 if success 0 if failed
  */
-static inline int _darray_expand(void **dst, size_t src_size, size_t index){
+static DARRAY_INLINE int _darray_expand(void **dst, size_t src_size, size_t index){
     struct darray_header *header = DARRAY_HEADER(*dst);
 
     size_t target_size = header->size;
@@ -379,7 +356,7 @@ static inline int _darray_expand(void **dst, size_t src_size, size_t index){
  * Function to insert from src of size src_size in dst at index.
  *
  */
-static inline int _darray_insert(void **dst, const void *src, size_t src_size, size_t index){
+static DARRAY_INLINE int _darray_insert(void **dst, const void *src, size_t src_size, size_t index){
     if(_darray_expand(dst, src_size, index) != 0){
         memmove(((uint8_t *)*dst)+index, src, src_size);
         return 1;
@@ -415,16 +392,16 @@ static inline int _darray_insert(void **dst, const void *src, size_t src_size, s
 
 
 /*
- *
- * remove should not be able to fail even if realloc fails.
+ * Function to remove elements.
  */
-static inline int _darray_remove(void **dst, size_t size, size_t index){
+static DARRAY_INLINE int _darray_remove(void **dst, size_t size, size_t index){
     struct darray_header *header = DARRAY_HEADER(*dst);
-    if(size > header->size || index+size > header->size)
+    if(index+size > header->size)
         return 0;
     memmove(((uint8_t *)*dst)+index, ((uint8_t *)*dst)+index+size, header->size-(index + size));
     header->size -= size;
 
+    // reallocate if new size is smaller than 1/SHRINK_LIMIT * header->cap
     if(header->size * DARRAY_SHRINK_LIMIT <= header->cap){
         size_t cap = (header->size) * DARRAY_SHRINK_FACTOR;
         if((header = (struct darray_header *)DARRAY_REALLOC(header, sizeof(struct darray_header)+cap)) == NULL)
@@ -435,7 +412,7 @@ static inline int _darray_remove(void **dst, size_t size, size_t index){
     return 1;
 }
 
-static inline void *_darray_pop_back(void **dst, size_t size){
+static DARRAY_INLINE void *_darray_pop_back(void **dst, size_t size){
     struct darray_header *header = DARRAY_HEADER(*dst);
     void *ret = ((uint8_t *)*dst)+header->size-size;
     if(!_darray_remove(dst, size, header->size-size)){
@@ -445,7 +422,7 @@ static inline void *_darray_pop_back(void **dst, size_t size){
 }
 
 
-static inline void _darray_free(void **dst){
+static DARRAY_INLINE void _darray_free(void **dst){
     struct darray_header *header = DARRAY_HEADER(*dst);
     DARRAY_FREE(header);
     *dst = NULL;

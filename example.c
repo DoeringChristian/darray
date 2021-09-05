@@ -20,6 +20,66 @@ struct test{
     int i;
 };
 
+int main(){
+    darray(char *) text;
+    darray_init(&text, 10);
+    char *text1 = "abcd";
+    char *text2 = "efgh";
+
+    darray_push_back(&text, text1);
+    darray_push_back(&text, text2);
+
+    darray(int) array;
+    darray_init(&array, 10);
+    array_print(array);
+
+    darray_push_back(&array, 1);
+    array_print(array);
+    darray_push_back(&array, 2);
+    array_print(array);
+    darray_push_back(&array, 3);
+    array_print(array);
+    darray_push_back(&array, 4);
+    array_print(array);
+    darray_push_back(&array, 5);
+    array_print(array);
+    darray_push_back(&array, 6);
+    array_print(array);
+    darray_push_back(&array, 7);
+    array_print(array);
+    darray_push_back(&array, 8);
+    array_print(array);
+    darray_push_back(&array, 9);
+    array_print(array);
+    darray_push_back(&array, 10);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    darray_pop(&array, 0);
+    array_print(array);
+    
+    return 0;
+}
+
+#if 0
 
 int main(){
 
@@ -111,3 +171,4 @@ int main(){
 
     darray_free(&str);
 }
+#endif
