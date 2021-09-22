@@ -175,6 +175,15 @@ struct darray_header{
 #define darray_append(_arr_p, _elem_p, _num) darray_insert(_arr_p, _elem_p, _num, darray_size((_arr_p)))
 
 /*
+ * Prepends an array of _elem to the front of the array.
+ *
+ * @param _arr_p: Pointer to the darray.
+ * @param _elem_p: Pointer to the elements which should be prepended.
+ * @param _num: number of elements which should be prepended.
+ */
+#define darray_prepend(_arr_p, _elem_p, _num) darray_insert(_arr_p, _elem_p, _num, 0)
+
+/*
  * Inserts an _elem directly into the array at _index. 
  *
  * Further elements after _index are moved to the right. Capacity is increaced if needed.
@@ -212,7 +221,7 @@ struct darray_header{
  *
  * @return int: 1 if succes, 0 if failed
  */
-#define darray_insert(_arr_p, _elem_p, _num, _index) _darray_insert((void **)(_arr_p), _elem_p, sizeof(**(_arr_p))*(_num), (_index)*(sizeof(**(_arr_p))))
+#define darray_insert(_arr_p, _elem_p, _num, _index) (((*(_arr_p)) == (_elem_p)) ? 0 : _darray_insert((void **)(_arr_p), _elem_p, sizeof(**(_arr_p))*(_num), (_index)*(sizeof(**(_arr_p)))))
 
 /*
  * Removes an element from the darray.

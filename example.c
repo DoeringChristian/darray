@@ -75,6 +75,27 @@ int main(){
     array_print(array);
     darray_pop(&array, 0);
     array_print(array);
+
+    darray(char) str;
+
+    darray_init(&str, 0);
+
+    char *ap = "test";
+    char *ap2 = " test2";
+
+    darray_append(&str, ap, strlen(ap));
+    darray_append(&str, ap2, strlen(ap2));
+
+    darray_push_back(&str, 0);
+
+    printf("str: %s\n", str);
+
+    darray_remove(&str, strlen(ap)+1, 0);
+
+    printf("str: %s\n", str);
+
+    darray_free(&str);
+    darray_free(&array);
     
     return 0;
 }
