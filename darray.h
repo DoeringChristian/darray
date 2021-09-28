@@ -336,6 +336,8 @@ static DARRAY_INLINE struct darray_header *_darray_init(void **dst, size_t cap){
  * @return 1 if success 0 if failed
  */
 static DARRAY_INLINE int _darray_expand(void **dst, size_t src_size, size_t index){
+    if(dst == NULL || *dst == NULL)
+        return 0;
     struct darray_header *header = DARRAY_HEADER(*dst);
 
     size_t target_size = header->size;
@@ -404,6 +406,8 @@ static DARRAY_INLINE int _darray_insert(void **dst, const void *src, size_t src_
  * Function to remove elements.
  */
 static DARRAY_INLINE int _darray_remove(void **dst, size_t size, size_t index){
+    if(dst == NULL || *dst == NULL)
+        return 0;
     struct darray_header *header = DARRAY_HEADER(*dst);
     if(index+size > header->size)
         return 0;
@@ -422,6 +426,8 @@ static DARRAY_INLINE int _darray_remove(void **dst, size_t size, size_t index){
 }
 
 static DARRAY_INLINE void *_darray_pop_back(void **dst, size_t size){
+    if(dst == NULL || *dst == NULL)
+        return NULL;
     struct darray_header *header = DARRAY_HEADER(*dst);
     void *ret = ((uint8_t *)*dst)+header->size-size;
     if(!_darray_remove(dst, size, header->size-size)){
@@ -432,6 +438,8 @@ static DARRAY_INLINE void *_darray_pop_back(void **dst, size_t size){
 
 
 static DARRAY_INLINE void _darray_free(void **dst){
+    if(dst == NULL || *dst == NULL)
+        return;
     struct darray_header *header = DARRAY_HEADER(*dst);
     DARRAY_FREE(header);
     *dst = NULL;
