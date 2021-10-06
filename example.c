@@ -85,6 +85,7 @@ int main(){
 
     darray_append(&str, ap, strlen(ap));
     darray_append(&str, ap2, strlen(ap2));
+    darray_append(&str, ":test", 5);
 
     darray_push_back(&str, 0);
 
