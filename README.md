@@ -2,10 +2,10 @@
 Generic dynamic array in C.
 
 ## Summary
-darray is a generic array written in C for C. It is compatible with C89/C90 and upwards as well as C++ without using "external C".
-Similar to an allocator Darray handles the size and capacity management of the dynamic array in a header before the data.
+darray is a generic array written in C for C. It is compatible with C89/C90 and upwards as well as with C++ without using "external C".
+Similar to an allocator darray handles the size and capacity management of the dynamic array in a header before the data.
 Elements of darray can be accessed using the builtin [] operator in C.
-All macros are type save in the sense that the compiler will emit a warning when inserting the wrong type.
+All macros are type save in the sense that the compiler will emmit a warning when inserting the wrong type. Furthermore all macros represent either direct function calls or operations which return values. All operations either return 0 if they have failed and 1 if they have succeded.
 
 
 ## Rationale
