@@ -68,10 +68,10 @@ SOFTWARE.
  *   darray_insert_arr(&test, a, 4, 18);
  *
  *   // Elements can be removed. The array only shrinks after reaching half its size.
- *   darray_remove(&test, darray_size(&test)-1);
+ *   darray_remove(&test, darray_len(&test)-1);
  *
  *   // Elements can be indexed like a c array.
- *   for(int i = 0;i < darray_size(&test); i++){
+ *   for(int i = 0;i < darray_len(&test); i++){
  *       printf("%i\n", test[i]);
  *   }
  *   darray_free(&test);
@@ -172,7 +172,7 @@ struct darray_header{
  * @return int: 1 if succes, 0 if failed
  */
 
-#define darray_append(_arr_p, _elem_p, _num) darray_insert(_arr_p, _elem_p, _num, darray_size((_arr_p)))
+#define darray_append(_arr_p, _elem_p, _num) darray_insert(_arr_p, _elem_p, _num, darray_len((_arr_p)))
 
 /*
  * Prepends an array of _elem to the front of the array.
@@ -206,7 +206,7 @@ struct darray_header{
  * @param _arr_p: pointer to the darray.
  * @param _elem: Element which is to be pushed.
  */
-#define darray_push_back(_arr_p, _elem) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), darray_size(_arr_p)*sizeof(**(_arr_p)) ) ? ((*(_arr_p))[darray_size(_arr_p)-1] = (_elem)) == (_elem) : 0)
+#define darray_push_back(_arr_p, _elem) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), darray_len(_arr_p)*sizeof(**(_arr_p)) ) ? ((*(_arr_p))[darray_len(_arr_p)-1] = (_elem)) == (_elem) : 0)
 
 /*
  * Inserts an _elem directly at the front of the array.
@@ -267,7 +267,7 @@ struct darray_header{
  *
  * @return int: 1 if succes, 0 if failed
  */
-#define darray_pop_back(_arr_p) darray_pop(_arr_p, darray_size(_arr_p)-1)
+#define darray_pop_back(_arr_p) darray_pop(_arr_p, darray_len(_arr_p)-1)
 
 /*
  * Frees the content of array and sets its pointer to 0.
@@ -281,9 +281,18 @@ struct darray_header{
  *
  * @param _arr_p: Pointer to the darray.
  *
- * @return size_t: size of the array as in count of _elem
+ * @return size_t: size of the array in count of _elem
  */
-#define darray_size(_arr_p) (DARRAY_HEADER(*(_arr_p))->size /sizeof(**(_arr_p)))
+#define darray_len(_arr_p) (DARRAY_HEADER(*(_arr_p))->size /sizeof(**(_arr_p)))
+
+/*
+ * Returns the size of the darray in bytes.
+ *
+ * @param _arr_p: Pointer to the darray.
+ *
+ * @return: Size of the array in bytes.
+ */
+#define darray_size(_arr_p) (DARRAY_HEADER(*(_arr_p))->size)
 
 static DARRAY_INLINE struct darray_header *_darray_init(void **dst, size_t cap){
     struct darray_header *header = NULL;

@@ -10,7 +10,7 @@
 void array_print(darray(int) arr){
     struct darray_header *header = DARRAY_HEADER(arr);
     printf("cap: %li, size: %li\n", header->cap, header->size);
-    for(int i = 0;i < darray_size(&arr);i++){
+    for(int i = 0;i < darray_len(&arr);i++){
         printf("%i ", arr[i]);
     }
     printf("\n");

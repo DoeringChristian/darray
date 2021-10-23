@@ -2,10 +2,10 @@
 Generic dynamic array in C.
 
 ## Summary
-darray is a generic array written in C for C. It is compatible with C89/C90 and upwards as well as with C++ without using "external C".
-Similar to an allocator darray handles the size and capacity management of the dynamic array in a header before the data.
+darray is a generic array written in C for C. It is compatible with C89/C90 and upwards as well as C++ without using "external C".
+Similar to an allocator Darray handles the size and capacity management of the dynamic array in a header before the data.
 Elements of darray can be accessed using the builtin [] operator in C.
-All macros are type save in the sense that the compiler will emmit a warning when inserting the wrong type. Furthermore all macros represent either direct function calls or operations which return values. All operations either return 0 if they have failed and 1 if they have succeded.
+All macros are type save in the sense that the compiler will emit a warning when inserting the wrong type.
 
 
 ## Rationale
@@ -34,6 +34,8 @@ The "\_darray\_insert" and "\_darray\_remove" functions of darray are as generic
 | Insert at the beginning | darray\_push\_front(\_arr\_p, \_elem)            | darray\_prepend(\_arr\_p, \_elem\_p, \_num)         |
 | Remove at index         | darray\_pop(\_arr\_p, \_index)                   | darray\_remove(\_arr\_p, \_num, \_index)            |
 | Remove at the end       | darray\_pop\_back(\_arr\_p)                      | ---                                                 |
+
+darray\_size(\_arr\_p) returns the size in bytes whereas darray\_len(\_arr\_p) returns the length in number of elements.
 
 darray\_free(\_arr\_p) frees the array and sets it to NULL.
 
