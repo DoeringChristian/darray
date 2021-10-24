@@ -294,6 +294,27 @@ struct darray_header{
  */
 #define darray_size(_arr_p) (DARRAY_HEADER(*(_arr_p))->size)
 
+/*
+ * Gets index of an element in the array.
+ *
+ * For elements ouside of the array the index will not be valid.
+ *
+ * @param _arr_p: Pointer to the darray.
+ * @param _elem_p: Pointer to the element.
+ *
+ * @return: Index of the element in the array.
+ */
+#define darray_indexof(_arr_p, _elem_p) (((_elem_p) - (*(_arr_p))))
+
+/*
+ * Iterates over the array.
+ *
+ * @param _iter_p: Iterator pointer used to iterate over the array.
+ * @param _arr_p: Pointer to the array.
+ */
+#define darray_foreach(_iter_p, _arr_p)\
+    for((_iter_p) = (_arr_p)[0]; darray_indexof(_arr_p, _iter_p) < darray_len(_arr_p);(_iter_p)++)
+
 static DARRAY_INLINE struct darray_header *_darray_init(void **dst, size_t cap){
     struct darray_header *header = NULL;
     if((header = (struct darray_header *)DARRAY_MALLOC(sizeof(struct darray_header) + cap)) == NULL)
@@ -393,32 +414,6 @@ static DARRAY_INLINE int _darray_insert(void **dst, const void *src, size_t src_
         return 1;
     }
     return 0;
-#if 0
-    struct darray_header *header = DARRAY_HEADER(*dst);
-
-    size_t target_size = header->size;
-    if(index > header->size)
-        target_size = index;
-
-    size_t cap = _darray_ciellog2(target_size+src_size);
-    // since header is a temporary pointer it should be ok to overwrite it with realloc.
-    if(cap > header->cap){
-        if((header = (struct darray_header *)DARRAY_REALLOC(header, sizeof(struct darray_header)+cap)) == NULL)
-            return 0;
-        header->cap = cap;
-        *dst = (void *)&header[1];
-    }
-    // either cap was les or equal to header->cap therefore header is still the same and not NULL
-    // or we sucessfully allocated new memory.
-    // or we didn't and returned.
-
-    // set memory to zero if index > header->size
-    memset(((uint8_t *)*dst)+header->size, 0, target_size-header->size);
-    memmove(((uint8_t *)*dst)+src_size+index, ((uint8_t *)*dst)+index, target_size-index);
-    memmove(((uint8_t *)*dst)+index, src, src_size);
-    header->size = target_size+src_size;
-    return 1;
-#endif
 }
 
 
@@ -445,18 +440,9 @@ static DARRAY_INLINE int _darray_remove(void **dst, size_t size, size_t index){
     return 1;
 }
 
-static DARRAY_INLINE void *_darray_pop_back(void **dst, size_t size){
-    if(dst == NULL || *dst == NULL)
-        return NULL;
-    struct darray_header *header = DARRAY_HEADER(*dst);
-    void *ret = ((uint8_t *)*dst)+header->size-size;
-    if(!_darray_remove(dst, size, header->size-size)){
-        ret = NULL;
-    }
-    return ret;
-}
-
-
+/*
+ * Function to free an darra.
+ */
 static DARRAY_INLINE void _darray_free(void **dst){
     if(dst == NULL || *dst == NULL)
         return;

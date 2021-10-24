@@ -95,6 +95,11 @@ int main(){
 
     printf("str: %s\n", str);
 
+    char *c;
+    darray_foreach(c, &str){
+        printf("%c\n", *c);
+    }
+
     darray_free(&str);
     darray_free(&array);
     
