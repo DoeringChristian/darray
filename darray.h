@@ -195,7 +195,7 @@ struct darray_header{
  * @param _elem: Element which is to be pushed.
  * @param _index: index at which poisition the element should be inserted.
  */
-#define darray_push(_arr_p, _elem, _index) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (_index)*sizeof(**(_arr_p))) ? ((*(_arr_p))[_index] = (_elem)) == (_elem) : 0)
+#define darray_push(_arr_p, _elem, _index) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (_index)*sizeof(**(_arr_p))) ? ((*(_arr_p))[_index] = (_elem)), 1 : 0)
 
 /*
  * Inserts an _elem directly at the end of the array. 
@@ -206,7 +206,7 @@ struct darray_header{
  * @param _arr_p: pointer to the darray.
  * @param _elem: Element which is to be pushed.
  */
-#define darray_push_back(_arr_p, _elem) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), darray_len(_arr_p)*sizeof(**(_arr_p)) ) ? ((*(_arr_p))[darray_len(_arr_p)-1] = (_elem)) == (_elem) : 0)
+#define darray_push_back(_arr_p, _elem) darray_push(_arr_p, _elem, darray_len(_arr_p))
 
 /*
  * Inserts an _elem directly at the front of the array.
@@ -217,7 +217,7 @@ struct darray_header{
  * @param _arr_p: pointer to the darray.
  * @param _elem: Element which should be pushed.
  */
-#define darray_push_front(_arr_p, _elem) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), 0) ? ((*(_arr_p))[0] = (_elem)) == (_elem) : 0)
+#define darray_push_front(_arr_p, _elem) darray_push(_arr_p, _elem, 0)
 
 /*
  * Inserts an array of _elem into the darray at _index.
