@@ -124,6 +124,8 @@ SOFTWARE.
 #define DARRAY_SHRINK_LIMIT 4
 #endif
 
+static size_t DARRAY_TMP = 0;
+
 /*
  * Header structure of darray keeps track of the size and cap.
  *
@@ -195,7 +197,7 @@ struct darray_header{
  * @param _elem: Element which is to be pushed.
  * @param _index: index at which poisition the element should be inserted.
  */
-#define darray_push(_arr_p, _elem, _index) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (_index)*sizeof(**(_arr_p))) ? ((*(_arr_p))[_index] = (_elem)), 1 : 0)
+#define darray_push(_arr_p, _elem, _index) (_darray_expand((void **)(_arr_p), sizeof(**(_arr_p)), (DARRAY_TMP = (_index))*sizeof(**(_arr_p))) ? ((*(_arr_p))[DARRAY_TMP] = (_elem)), 1 : 0)
 
 /*
  * Inserts an _elem directly at the end of the array. 
