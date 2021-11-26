@@ -309,6 +309,17 @@ struct darray_header{
 #define darray_indexof(_arr_p, _elem_p) (((_elem_p) - (*(_arr_p))))
 
 /*
+ * Returns last element of the array.
+ * 
+ * If the array is empty this will result in undefined behaviour.
+ *
+ * @param _arr_p: Pointer to the darray.
+ * 
+ * @return: Last element of the array.
+ */
+#define darray_last(_arr_p) ((*(_arr_p))[darray_len(_arr_p) - 1])
+
+/*
  * Iterates over the array.
  *
  * @param _iter_p: Iterator pointer used to iterate over the array.
